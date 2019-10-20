@@ -17,8 +17,8 @@ public class OrderService {
         this.bookRepository = bookRepository;
     }
 
-    public Optional<Book> borrowBook(String title) {
-        return bookRepository.borrowBook(title, LocalDate.now().plusDays(30));
+    public Optional<Book> borrowBook(int id) {
+        return bookRepository.borrowBook(id, LocalDate.now().plusDays(30));
     }
 
     public Book addBook(String title, String author) {
@@ -26,8 +26,8 @@ public class OrderService {
         return bookRepository.addBook(bookToAdd);
     }
 
-    public void removeBook(int id) {
-        bookRepository.removeBook(id);
+    public boolean removeBook(int id) {
+        return bookRepository.removeBook(id);
     }
 
     public void returnBook(int id) {

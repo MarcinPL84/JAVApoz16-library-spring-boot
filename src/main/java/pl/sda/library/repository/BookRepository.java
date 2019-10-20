@@ -4,10 +4,7 @@ import org.springframework.stereotype.Repository;
 import pl.sda.library.model.Book;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -25,16 +22,8 @@ public class BookRepository {
                 new Book(10, "Testy", "Kaczanowski")));
     }
 
-    public Optional<Book> borrowBook(String title, LocalDate borrowedTill) {
-        //        for (pl.sda.library.model.Book book : books) {alternatywa
-        //            if (title.equals(book.getTitle())){
-        //                if (book.getBorrowedTill() == null) {
-        //                    book.setBorrowedTill(borrowedTill);
-        //                    return Optional.of(book);
-        //                }
-        //            }
-        //        }
-        Optional<Book> any = books.stream().filter(book -> title.equals(book.getTitle()))
+    public Optional<Book> borrowBook(int id, LocalDate borrowedTill) {
+        Optional<Book> any = books.stream().filter(book -> id == book.getId())
             .filter(book -> book.getBorrowedTill() == null).findAny();
         any.ifPresent(book -> book.setBorrowedTill(borrowedTill));
         return any;
@@ -58,18 +47,19 @@ public class BookRepository {
         return bookToAdd;
     }
 
-    public void removeBook(int id) {
-        Book bookToRemove = books.stream().filter(book -> id == book.getId()).findFirst()
-            .orElseThrow(() -> new RuntimeException("pl.sda.library.model.Book not found"));
-        books.remove(bookToRemove);
+    public boolean removeBook(int id) {
+        Optional<Book> bookToRemove = books.stream().filter(book -> id == book.getId()).findAny();
+        if (bookToRemove.isPresent()) {
+            return books.remove(bookToRemove.get());
+        }
+        return false;
     }
 
     public Set<Book> getBooks(String title) {
         if (title == null) {
             return books;
         }
-        return books.stream()
-            .filter(book -> book.getTitle().equals(title))
+        return books.stream().filter(book -> book.getTitle().equals(title))
             .collect(Collectors.toSet());
     }
 
