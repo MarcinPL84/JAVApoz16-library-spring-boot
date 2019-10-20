@@ -46,6 +46,12 @@ public class BookController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping(value = "/book/retrieve/{id}")
+    public ResponseEntity retrieveBook(@PathVariable int id) {
+        orderService.returnBook(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
 
 
